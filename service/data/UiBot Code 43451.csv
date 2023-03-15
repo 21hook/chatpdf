@@ -1,0 +1,11 @@
+﻿Name,Tags,Date,Status
+slice,"Function slice(arr, startIdx, endIdx=Null)
+If IsNull(endIdx)
+return splice(arr, startIdx, Len(arr) -1)
+Else
+return splice(arr, startIdx, endIdx -1)
+End If
+End Function",,
+includes,,,
+indexOf,,,
+join,,,
