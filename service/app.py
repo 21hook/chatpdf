@@ -4,9 +4,10 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from utils.parse import parse_pdf
+from utils.parse_docx import parse_docx
 from utils.api import call_gpt, call_davinci
 
-
+@app.route('/file', methods=['POST'])
 app = Flask(__name__)
 CORS(app, origins="http://localhost:3000")
 
@@ -26,9 +27,12 @@ def upload_pdf():
     filename = secure_filename(file.filename)
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
      
-    # Get the text from the pdf file
-    # Parse the pdf file
-    text = parse_pdf(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # Get the text from the file
+    # Parse the file based on its extension
+    if filename.endswith('.pdf'):
+        text = parse_pdf(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    elif filename.endswith('.docx'):
+        text = parse_docx(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     # Call with the davinci
     # response = call_davinci(message=text)
