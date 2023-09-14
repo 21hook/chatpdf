@@ -28,12 +28,17 @@ def upload_pdf():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
      
-    # Get the text from the file
-    # Parse the file based on its extension
-    if filename.endswith('.pdf'):
-        text = parse_pdf(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    elif filename.endswith('.docx'):
-        text = parse_docx(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    for file in files:
+        # Save the file to the upload folder
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    
+        # Get the text from the file
+        # Parse the file based on its extension
+        if filename.endswith('.pdf'):
+            text = parse_pdf(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        elif filename.endswith('.docx'):
+            text = parse_docx(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     # Call with the davinci
     # response = call_davinci(message=text)
