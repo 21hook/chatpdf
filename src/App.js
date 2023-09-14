@@ -168,6 +168,7 @@ export default function App() {
       const file = document.createElement("input");
       file.setAttribute("accept", ".text,.pdf,.docx");
       file.type = "file";
+      file.multiple = true;
       file.click();
       // 触发 onchange 事件
       file.onchange = function () {
@@ -180,8 +181,10 @@ export default function App() {
         });
 
         const formData = new FormData();
-        // Append the file
-        formData.append("file", file.files[0]);
+        // Append the files
+        for (let i = 0; i < file.files.length; i++) {
+          formData.append("file", file.files[i]);
+        }
         
         // request for upload
         fetch('http://localhost:8000/file', {
