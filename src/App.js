@@ -53,6 +53,9 @@ export default function App() {
     initialMessages
   );
 
+  // State variable to store the chat history in the frontend
+  const [chatHistory, setChatHistory] = useState([]);
+
   // a helper function to append a message
   function appendMsgList(text) {
     // substring from Questions:
@@ -210,27 +213,23 @@ export default function App() {
   // Only apply to the input event
   function handleSend(type, val) {
     console.log(type, val);
-    /*
-      The first 3 conditions are for the normal message
-      The last condition is for the fallback message
-    */
     if (type === "text" && val.trim()) {
       if (val === "reset") {
         window.location.reload();
       } else if (val === "clear") {
         resetList();
-        // } else if (val === "Questions 1") {
       } else {
-        // Predefined & open-ended questions
+        // Add the new chat to chatHistory before calling fetch
+        setChatHistory([...chatHistory, {role: "user", content: val}]);
+        if (chatHistory.length > 10) {
+          setChatHistory(chatHistory.slice(1));
+        }
+  
         appendMsg({
           type: "text",
           content: { text: val },
           position: "right"
         });
-
-        setTyping(true);
-
-        // request for chat
         fetch('http://localhost:8000/chat', {
           method: 'POST',
           headers: {
@@ -241,6 +240,12 @@ export default function App() {
           }),
         }).then(res => res.json())
           .then(data => {
+            // Add the response from the API to chatHistory
+            setChatHistory([...chatHistory, {role: "assistant", content: data.message.content.trim()}]);
+            if (chatHistory.length > 10) {
+              setChatHistory(chatHistory.slice(1));
+            }
+        
             appendMsg({
               type: "text",
               content: { text: data.message.content.trim()},
