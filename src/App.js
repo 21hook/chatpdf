@@ -166,7 +166,7 @@ export default function App() {
       /** 上传文件 */
       // 调用原生 input[type=file] 上传文件
       const file = document.createElement("input");
-      file.setAttribute("accept", ".text,.pdf");
+      file.setAttribute("accept", ".text,.pdf,.docx");
       file.type = "file";
       file.click();
       // 触发 onchange 事件
@@ -181,10 +181,10 @@ export default function App() {
 
         const formData = new FormData();
         // Append the file
-        formData.append("pdf", file.files[0]);
-
-
+        formData.append("file", file.files[0]);
+        
         // request for upload
+        fetch('http://localhost:8000/file', {
         fetch('http://localhost:8000/pdf', {
           method: 'POST',
           body: formData,
